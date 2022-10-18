@@ -6,10 +6,10 @@ package Entity;
  */
 
 public class MonthReportItem {
-      String itemName;
-      Boolean isExpense;
-      Integer quantity;
-      Integer sumOfOne;
+      public String itemName;
+      public Boolean isExpense;
+      public Integer quantity;
+      public Integer sumOfOne;
 
       public MonthReportItem(String itemName, Boolean isExpense, Integer quantity, Integer sumOfOne) {
             this.itemName = itemName;

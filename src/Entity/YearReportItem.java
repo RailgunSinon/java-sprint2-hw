@@ -1,9 +1,9 @@
 package Entity;
 
 public class YearReportItem {
-    Integer month;
-    Integer amount;
-    Boolean isExpense;
+    public Integer month;
+    public Integer amount;
+    public Boolean isExpense;
 
     public YearReportItem(Integer month,Integer amount,Boolean isExpense){
         this.month = month;

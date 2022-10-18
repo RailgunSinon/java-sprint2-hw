@@ -7,6 +7,8 @@ import java.util.Scanner;
 
 public class Main {
 
+    static ReportAnalyzer reportAnalyzer = new ReportAnalyzer();
+
     public static void main(String[] args) {
         String userInput = "";
 
@@ -14,7 +16,6 @@ public class Main {
         ArrayList<YearReportItem> yearReports = new ArrayList<>();
 
         Scanner scanner = new Scanner(System.in);
-        ReportAnalyzer reportAnalyzer = new ReportAnalyzer();
         FileWorkClass fileWorkClass = new FileWorkClass();
 
         while (true){
@@ -33,10 +34,14 @@ public class Main {
                         System.out.println("Готово!");
                         break;
                     case "3":
+                        System.out.println("Сверка данных по отчётам:");
+
                         break;
                     case "4":
+                        printMonthReport(monthReports);
                         break;
                     case "5":
+                        printYearReport(yearReports);
                         break;
                     case "exit":
                         System.out.println("Выбран выход из приложения. Всего доброго!");
@@ -65,5 +70,35 @@ public class Main {
         System.out.println("Для выхода из программы введите exit.");
         System.out.println("Введите команду:");
     }
-}
 
+    private static String getMonthName(int number){
+        String[] monthNames = {"Январь","Февраль","Март","Апрель","Май","Июнь","Июль","Август","Сентябрь","Октябрь","Ноябрь","Декабрь"};
+        return monthNames[number-1];
+    }
+
+    private static void printYearReport(ArrayList<YearReportItem> yearReport){
+        System.out.println("Годовой отчет за 2021:");
+        System.out.println("Прибыть по месяцам:");
+        for(int i=0,count=1;i<yearReport.size();i+=2,count++){
+            System.out.println(getMonthName(count) + ": " + reportAnalyzer.getProfitForMonth(yearReport,count));
+        }
+        System.out.println("Средний доход за год составил: " + String.format("%.3f",reportAnalyzer.getExpensesOrIncomeAverage(yearReport,false)));
+        System.out.println("Средний расход за год составил: " + String.format("%.3f",reportAnalyzer.getExpensesOrIncomeAverage(yearReport,true)));
+    }
+
+    private static void printMonthReport(HashMap<Integer, ArrayList<MonthReportItem>> monthReports){
+        System.out.println("Отчёты за месяцы:");
+        for (Integer key : monthReports.keySet()){
+            System.out.println(getMonthName(key) + ": ");
+            String[] result = reportAnalyzer.mostProfitableUnprofitableProduct(monthReports.get(key),false);
+            System.out.println("Самый прибыльный товар " + result[0] + " принёс " + result[1]);
+            result = reportAnalyzer.mostProfitableUnprofitableProduct(monthReports.get(key),true);
+            System.out.println("Самый убыточный товар " + result[0] + " - растрата " + result[1]);
+        }
+    }
+
+    private static void dataReconciliation(){
+
+    }
+
+}
