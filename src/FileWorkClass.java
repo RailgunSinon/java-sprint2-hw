@@ -1,8 +1,5 @@
 import Entity.MonthReportItem;
 import Entity.YearReportItem;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -12,7 +9,7 @@ import java.util.HashMap;
 /*
 Была идея отталкиваться от первой буквы в имени файла и универсализировать считывание из файла. Но по сути, нет необходимости из-зи того, что просто два метода
 попадут в один под простой if. Будет нагромождение, мне показалось это бессмысленным в текущих ТЗ. Но дубликация напрягает, пока нет идей как сделать универсально
-для того чтобы куда-то считать данные, а потом уже их распарсить.
+для того чтобы куда-то считать данные, а потом уже их распарсить. 
  */
 
 public class FileWorkClass {
@@ -21,16 +18,19 @@ public class FileWorkClass {
 
     private String inputFile = "";
     private String[] inputLines;
-    private File file;
-    private FileReader fileReader;
-    private BufferedReader bufferedReader;
 
+    private String[] getDataFromFile(String path){
+        try {
+            return Files.readString(Path.of(path)).split("\n");
+        } catch (IOException e) {
+            System.out.println("Невозможно прочитать файл с месячным отчётом. Возможно, файл не находится в нужной директории.");
+            return null;
+        }
+    }
 
-    private ArrayList<MonthReportItem> readMonthReport(String reportName)
-        throws IOException {
+    private ArrayList<MonthReportItem> readMonthReport(String reportName){
         ArrayList<MonthReportItem> resultSet = new ArrayList<>();
-        inputFile = Files.readString(Path.of("resources\\" + reportName));
-        inputLines = inputFile.split("\n");
+        inputLines = getDataFromFile("resources\\" + reportName);
 
         for(int i=1;i < inputLines.length;i++){
             String[] values = inputLines[i].split(",");
@@ -55,11 +55,9 @@ public class FileWorkClass {
     }
 
     public  ArrayList<YearReportItem> readYearReport() throws IOException{
-
         ArrayList<YearReportItem> resultSet = new ArrayList<>();
         String fileName = "y." + CURRENT_YEAR + ".csv";
-        inputFile = Files.readString(Path.of("resources\\" + fileName));
-        inputLines = inputFile.split("\n");
+        inputLines = getDataFromFile("resources\\" + fileName);
 
         for(int i=1;i < inputLines.length;i++){
             String[] values = inputLines[i].split(",");
