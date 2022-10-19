@@ -35,7 +35,7 @@ public class Main {
                         break;
                     case "3":
                         System.out.println("Сверка данных по отчётам:");
-
+                        dataReconciliation(yearReports,monthReports);
                         break;
                     case "4":
                         printMonthReport(monthReports);
@@ -71,16 +71,13 @@ public class Main {
         System.out.println("Введите команду:");
     }
 
-    private static String getMonthName(int number){
-        String[] monthNames = {"Январь","Февраль","Март","Апрель","Май","Июнь","Июль","Август","Сентябрь","Октябрь","Ноябрь","Декабрь"};
-        return monthNames[number-1];
-    }
+
 
     private static void printYearReport(ArrayList<YearReportItem> yearReport){
         System.out.println("Годовой отчет за 2021:");
         System.out.println("Прибыть по месяцам:");
         for(int i=0,count=1;i<yearReport.size();i+=2,count++){
-            System.out.println(getMonthName(count) + ": " + reportAnalyzer.getProfitForMonth(yearReport,count));
+            System.out.println(reportAnalyzer.getMonthName(count) + ": " + reportAnalyzer.getProfitForMonth(yearReport,count));
         }
         System.out.println("Средний доход за год составил: " + String.format("%.3f",reportAnalyzer.getExpensesOrIncomeAverage(yearReport,false)));
         System.out.println("Средний расход за год составил: " + String.format("%.3f",reportAnalyzer.getExpensesOrIncomeAverage(yearReport,true)));
@@ -89,7 +86,7 @@ public class Main {
     private static void printMonthReport(HashMap<Integer, ArrayList<MonthReportItem>> monthReports){
         System.out.println("Отчёты за месяцы:");
         for (Integer key : monthReports.keySet()){
-            System.out.println(getMonthName(key) + ": ");
+            System.out.println(reportAnalyzer.getMonthName(key) + ": ");
             String[] result = reportAnalyzer.mostProfitableUnprofitableProduct(monthReports.get(key),false);
             System.out.println("Самый прибыльный товар " + result[0] + " принёс " + result[1]);
             result = reportAnalyzer.mostProfitableUnprofitableProduct(monthReports.get(key),true);
@@ -97,8 +94,18 @@ public class Main {
         }
     }
 
-    private static void dataReconciliation(){
-
+    private static void dataReconciliation(ArrayList<YearReportItem> yearReport,HashMap<Integer, ArrayList<MonthReportItem>> monthReports){
+        System.out.println("Проводится сверка отчётов...");
+        ArrayList<String> check = reportAnalyzer.reportDataReconciliation(yearReport,monthReports);
+        if(check.isEmpty()){
+            System.out.println("Сверка отчётов успешно завершена. Проблем не обнаружено!");
+        } else {
+            System.out.println("Обнаружены следующие проблемы:");
+            for (String item : check){
+                System.out.println(item);
+            }
+            System.out.println("Сверка отчётов успешно завершена.");
+        }
     }
 
 }
