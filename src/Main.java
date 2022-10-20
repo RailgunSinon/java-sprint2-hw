@@ -1,5 +1,6 @@
 import Entity.MonthReportItem;
 import Entity.YearReportItem;
+import Exeptions.DataWasNotReadException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -7,16 +8,15 @@ import java.util.Scanner;
 
 public class Main {
 
-    static ReportAnalyzer reportAnalyzer = new ReportAnalyzer();
+    private final static ReportAnalyzer reportAnalyzer = new ReportAnalyzer();
+    private final static FileWorkClass fileWorkClass = new FileWorkClass();
+    private final static Scanner scanner = new Scanner(System.in);
 
     public static void main(String[] args) {
         String userInput = "";
 
         HashMap<Integer, ArrayList<MonthReportItem>> monthReports = new HashMap<>(); //Можно было и без них, но хочется закрепить
         ArrayList<YearReportItem> yearReports = new ArrayList<>();
-
-        Scanner scanner = new Scanner(System.in);
-        FileWorkClass fileWorkClass = new FileWorkClass();
 
         while (true){
             printMenu();
@@ -34,8 +34,15 @@ public class Main {
                         System.out.println("Готово!");
                         break;
                     case "3":
-                        System.out.println("Сверка данных по отчётам:");
-                        dataReconciliation(yearReports,monthReports);
+                        try {
+                            System.out.println("Сверка данных по отчётам:");
+                            checkIfReportsAreEmpty(yearReports,monthReports); //было желание проверить кастомные исключения
+                            dataReconciliation(yearReports,monthReports);
+                        } catch (DataWasNotReadException exception){
+                            System.out.println(exception.getMessage());
+                        } catch (Exception exception){
+                            System.out.println("Неизвестная ошибка!");
+                        }
                         break;
                     case "4":
                         printMonthReport(monthReports);
@@ -106,6 +113,17 @@ public class Main {
             }
             System.out.println("Сверка отчётов успешно завершена.");
         }
+    }
+
+    private static void checkIfReportsAreEmpty(ArrayList<YearReportItem> yearReport,HashMap<Integer, ArrayList<MonthReportItem>> monthReports)
+        throws DataWasNotReadException {
+      if(yearReport.size() == 0 && monthReports.size() == 0){
+          throw new DataWasNotReadException("Данные об отчётах месяцев и годов не были считаны!");
+      } else if(yearReport.size() == 0) {
+          throw new DataWasNotReadException("Данные об отчётах за год не были считаны!");
+      } else if(monthReports.size() == 0) {
+          throw new DataWasNotReadException("Данные об отчётах за месяцы не были считаны!");
+      }
     }
 
 }
