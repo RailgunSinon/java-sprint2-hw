@@ -7,7 +7,7 @@ import java.util.HashMap;
 import java.util.Scanner;
 
 public class Main {
-
+    //Теперь всё одинаково
     private final static ReportAnalyzer reportAnalyzer = new ReportAnalyzer();
     private final static FileWorkClass fileWorkClass = new FileWorkClass();
     private final static Scanner scanner = new Scanner(System.in);
@@ -36,7 +36,7 @@ public class Main {
                     case "3":
                         try {
                             System.out.println("Сверка данных по отчётам:");
-                            checkIfReportsAreEmpty(yearReports,monthReports); //было желание проверить кастомные исключения
+                            checkIfReportsAreEmpty(yearReports,monthReports); //было желание проверить кастомные исключения, заодно решает проблему
                             dataReconciliation(yearReports,monthReports);
                         } catch (DataWasNotReadException exception){
                             System.out.println(exception.getMessage());

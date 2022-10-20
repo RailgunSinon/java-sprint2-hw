@@ -9,11 +9,11 @@ public class ReportAnalyzer {
         int profit = 0;
 
         for(YearReportItem item : yearReport){
-          if(item.month == month){
-            if(item.isExpense == true){
-              profit -= item.amount;
+          if(item.getMonth() == month){
+            if(item.getExpense() == true){
+              profit -= item.getAmount();
             } else {
-              profit += item.amount;
+              profit += item.getAmount();
             }
           }
         }
@@ -25,8 +25,8 @@ public class ReportAnalyzer {
       double result = 0.0;
       int counter = 0;
       for(YearReportItem item : yearReport){
-        if(item.isExpense == isExpense){
-          result += item.amount;
+        if(item.getExpense() == isExpense){
+          result += item.getAmount();
           counter++;
         }
       }
@@ -38,9 +38,9 @@ public class ReportAnalyzer {
       double maxValue = 0;
       String name = "";
       for (MonthReportItem item : monthReport){
-        if(item.isExpense == isExpense && (item.sumOfOne*item.quantity) > maxValue){
-          name = item.itemName;
-          maxValue = item.quantity*item.sumOfOne;
+        if(item.getExpense() == isExpense && (item.getSumOfOne()*item.getQuantity()) > maxValue){
+          name = item.getItemName();
+          maxValue = item.getSumOfOne()*item.getQuantity();
         }
       }
 
@@ -59,19 +59,19 @@ public class ReportAnalyzer {
       expenses = 0;
 
       for(MonthReportItem item : monthReports.get(key)){
-         if(item.isExpense == false){
-           income += item.quantity*item.sumOfOne;
+         if(item.getExpense() == false){
+           income += item.getSumOfOne()*item.getQuantity();
          } else {
-           expenses += item.quantity*item.sumOfOne;
+           expenses += item.getSumOfOne()*item.getQuantity();
          }
       }
 
       for(YearReportItem item : yearReport){
-        if(item.month == key){
-          if(item.isExpense == false && item.amount != income){
+        if(item.getMonth() == key){
+          if(item.getExpense() == false && item.getAmount() != income){
             result.add("В месяце " + getMonthName(key) + " по доходам есть несоответствие.");
           }
-          if(item.isExpense ==true && item.amount != expenses){
+          if(item.getExpense() ==true && item.getAmount() != expenses){
             result.add("В месяце " + getMonthName(key) + " по расходам есть несоответствие.");
           }
         }
